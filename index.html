@@ -37,7 +37,7 @@
 		</a>
 
 		<hgroup>
-		  <h1 class="header-author"><a href="/">Ghostart</a></h1>
+		  <h1 class="header-author"><a href="/">梁大折腾</a></h1>
 		</hgroup>
 
 		
@@ -158,7 +158,7 @@
       <nav id="mobile-nav">
   	<div class="overlay">
   		<div class="slider-trigger"></div>
-  		<h1 class="header-author js-mobile-header hide">Ghostart</h1>
+  		<h1 class="header-author js-mobile-header hide">梁大折腾</h1>
   	</div>
 	<div class="intrude-less">
 		<header id="header" class="inner">
@@ -168,7 +168,7 @@
 				
 			</div>
 			<hgroup>
-			  <h1 class="header-author">Ghostart</h1>
+			  <h1 class="header-author">梁大折腾</h1>
 			</hgroup>
 			
 			<p class="header-subtitle">我不知道公主应该配王子还是骑士，我只想屠龙</p>
@@ -228,18 +228,30 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Python中yield黑科技">Python中yield黑科技</h1><h3 id="可迭代对象">可迭代对象</h3><p>场景：循环从一个list中读取每一个值并进行不可描述操作</p>
+        <h1 id="Python中yield黑科技">Python中yield黑科技</h1><h3 id="动机">动机</h3><p>场景：循环从一个list中读取每一个值并进行不可描述操作</p>
 <p>先看一个简单的List对象</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alist = [<span class="number">0</span> ,<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span> i in alist:</span><br><span class="line">    print i</span><br></pre></td></tr></table></figure>
 <p>使用 for in 读取所有元素，整体运转OK</p>
 <p>考虑如下情况，  我们要循环的不再是简单的int对象，而是我们自定的class，并且此 class 拥有繁重的 init。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">human</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line">	<span class="comment"># do a lot of other work to make a human.</span></span><br><span class="line">	<span class="comment"># 占用掉很多内存</span></span><br></pre></td></tr></table></figure>
-<h3 id="制造1万个人，每天换一个，陪你度过余生">制造1万个人，每天换一个，陪你度过余生</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">girls = [<span class="function"><span class="title">human</span><span class="params">(<span class="string">'泷泽萝拉'</span>)</span></span>, <span class="function"><span class="title">human</span><span class="params">(<span class="string">'吉泽明步'</span>)</span></span>...]</span><br></pre></td></tr></table></figure>
-<h4 id="你可以如上制作一万个人，但是你要自己敲一万个名字">你可以如上制作一万个人，但是你要自己敲一万个名字</h4><p>让我们试着改善下  </p>
+<p>制造1万个人，每天换一个，陪你度过余生</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">girls = [<span class="function"><span class="title">human</span><span class="params">(<span class="string">'泷泽萝拉'</span>)</span></span>, <span class="function"><span class="title">human</span><span class="params">(<span class="string">'吉泽明步'</span>)</span></span>...]</span><br></pre></td></tr></table></figure>
+<p>你可以如上制作一万个人，但是你要自己敲一万个名字</p>
+<p>让我们试着改善下  </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10000</span>):</span><br><span class="line">    Chinese.append(human(ranName()))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ranName</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'按照一定规则取名'</span></span><br></pre></td></tr></table></figure>
-<h4 id="现在你可以不用敲一万个人的名字，但是你把这一万个人都造好了，他们天天吃你的喝你的，住在内存-">现在你可以不用敲一万个人的名字，但是你把这一万个人都造好了，他们天天吃你的喝你的，住在内存.</h4><h4 id="于是你想，要是我需要用她们的时候再造一个不就好了？">于是你想，要是我需要用她们的时候再造一个不就好了？</h4><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def <span class="function"><span class="title">maker</span><span class="params">()</span></span>:</span><br><span class="line">    <span class="keyword">for</span> <span class="tag">i</span> <span class="keyword">in</span> <span class="function"><span class="title">range</span><span class="params">(<span class="number">10000</span>)</span></span>:</span><br><span class="line">    yield <span class="function"><span class="title">human</span><span class="params">(ranName()</span></span>)</span><br><span class="line">	</span><br><span class="line"><span class="keyword">for</span> <span class="tag">i</span> <span class="keyword">in</span> <span class="function"><span class="title">maker</span><span class="params">()</span></span>:</span><br><span class="line">    print i</span><br></pre></td></tr></table></figure>
+<p>现在你可以不用敲一万个人的名字，但是你把这一万个人都造好了，他们天天吃你的喝你的，住在内存. </p>
+<p>于是你想，要是我需要用她们的时候再造一个不就好了？  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def <span class="function"><span class="title">maker</span><span class="params">()</span></span>:</span><br><span class="line">    <span class="keyword">for</span> <span class="tag">i</span> <span class="keyword">in</span> <span class="function"><span class="title">range</span><span class="params">(<span class="number">10000</span>)</span></span>:</span><br><span class="line">    yield <span class="function"><span class="title">human</span><span class="params">(ranName()</span></span>)</span><br><span class="line">	</span><br><span class="line"><span class="keyword">for</span> <span class="tag">i</span> <span class="keyword">in</span> <span class="function"><span class="title">maker</span><span class="params">()</span></span>:</span><br><span class="line">    print i</span><br></pre></td></tr></table></figure>
 <p>在一开始申明的时候并不实例化她们，当需要用的时候再实例化她们。这就是Genorator。 </p>
-<p>yield 就是，返回一个 Gennorator。</p>
+<p>yield 就是，返回一个 <strong>Gennorator</strong>。</p>
+<h3 id="生成器_Generators">生成器 Generators</h3><p><strong>Generators are iterators, but you can only iterate over them once. It’s because they do not store all the values in memory, they generate the values on the fly</strong></p>
+<p>下面这个例子帮助你理解下</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">def f1():</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="type">range</span>(<span class="number">3</span>):</span><br><span class="line">        <span class="keyword">yield</span> i</span><br><span class="line">	</span><br><span class="line"><span class="keyword">for</span> f2():</span><br><span class="line">    <span class="keyword">yield</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="number">2</span></span><br><span class="line">    <span class="keyword">yield</span> <span class="number">3</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">for</span> f3():</span><br><span class="line">    <span class="literal">result</span> = []</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="type">range</span>(<span class="number">3</span>):</span><br><span class="line">        <span class="literal">result</span>.append(i)</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">result</span></span><br></pre></td></tr></table></figure>
+<p>f1与f2等效，f3相当于f1的解释版本，只是方便你理解yield到底做了啥</p>
+<p>接上面，再举一个栗子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">x = f1()</span><br><span class="line">y = f2()</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in x:</span><br><span class="line">    print i</span><br><span class="line"><span class="preprocessor"># <span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span></span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">for</span> i in x:</span><br><span class="line">    print i</span><br><span class="line"><span class="preprocessor"># 没任何结果</span></span><br><span class="line">    </span><br><span class="line"><span class="keyword">for</span> i in y:</span><br><span class="line">    print i</span><br><span class="line"><span class="preprocessor"># <span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i in y:</span><br><span class="line">    print i</span><br><span class="line"><span class="preprocessor"># <span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span></span></span><br></pre></td></tr></table></figure>
+<p>当你连着运行两次，y仍然保持正常。但是x就不行了，当你第二次运行的时候就没有任何输出，这就是它build on the fly的代价。<br>至于哪个好？<br><strong>选择适合他们的场景去完成你的工作</strong></p>
+<p>以下是stackoverflow上关于yield的资料：<br>yield on stackoverfolw <a href="http://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python" target="_blank" rel="external">http://stackoverflow.com/questions/231767/what-does-the-yield-keyword-do-in-python</a></p>
 
       
     </div>
@@ -276,7 +288,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2016 Ghostart
+    		&copy; 2016 梁大折腾
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten

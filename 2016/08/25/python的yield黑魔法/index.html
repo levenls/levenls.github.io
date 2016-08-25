@@ -8,29 +8,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Python中yield黑科技可迭代对象场景：循环从一个list中读取每一个值并进行不可描述操作
 先看一个简单的List对象
-123alist = [0 ,1, 2, 3]for i in alist:	print i
+123alist = [0 ,1, 2, 3]for i in alist:    print i
 使用 for in 读取所有元素，整体运转OK
 考虑如下情况，  我们要循环的不再是简单的int对象，而是我们自定的class，并且此 class 拥有繁重的 init。
-1234">
+1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python的yield黑魔法">
 <meta property="og:url" content="http://www.q0-o-0p.com/2016/08/25/python的yield黑魔法/index.html">
 <meta property="og:site_name" content="King of CC">
 <meta property="og:description" content="Python中yield黑科技可迭代对象场景：循环从一个list中读取每一个值并进行不可描述操作
 先看一个简单的List对象
-123alist = [0 ,1, 2, 3]for i in alist:	print i
+123alist = [0 ,1, 2, 3]for i in alist:    print i
 使用 for in 读取所有元素，整体运转OK
 考虑如下情况，  我们要循环的不再是简单的int对象，而是我们自定的class，并且此 class 拥有繁重的 init。
-1234">
-<meta property="og:updated_time" content="2016-08-25T05:44:06.000Z">
+1">
+<meta property="og:updated_time" content="2016-08-25T05:47:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python的yield黑魔法">
 <meta name="twitter:description" content="Python中yield黑科技可迭代对象场景：循环从一个list中读取每一个值并进行不可描述操作
 先看一个简单的List对象
-123alist = [0 ,1, 2, 3]for i in alist:	print i
+123alist = [0 ,1, 2, 3]for i in alist:    print i
 使用 for in 读取所有元素，整体运转OK
 考虑如下情况，  我们要循环的不再是简单的int对象，而是我们自定的class，并且此 class 拥有繁重的 init。
-1234">
+1">
   
     <link rel="alternative" href="/atom.xml" title="King of CC" type="application/atom+xml">
   
@@ -255,10 +255,10 @@
       
         <h1 id="Python中yield黑科技">Python中yield黑科技</h1><h3 id="可迭代对象">可迭代对象</h3><p>场景：循环从一个list中读取每一个值并进行不可描述操作</p>
 <p>先看一个简单的List对象</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alist = [<span class="number">0</span> ,<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span> i in alist:</span><br><span class="line">	print i</span><br></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alist = [<span class="number">0</span> ,<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line"><span class="keyword">for</span> i in alist:</span><br><span class="line">    print i</span><br></pre></td></tr></table></figure>
 <p>使用 for in 读取所有元素，整体运转OK</p>
 <p>考虑如下情况，  我们要循环的不再是简单的int对象，而是我们自定的class，并且此 class 拥有繁重的 init。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">human</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">(self, name)</span>:</span></span><br><span class="line">	    self.name = name</span><br><span class="line">	<span class="comment"># do a lot of other work to make a human.</span></span><br><span class="line">	<span class="comment"># 占用掉很多内存</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">human</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">init</span><span class="params">(self, name)</span>:</span></span><br><span class="line">        self.name = name</span><br><span class="line">	<span class="comment"># do a lot of other work to make a human.</span></span><br><span class="line">	<span class="comment"># 占用掉很多内存</span></span><br></pre></td></tr></table></figure>
 <h3 id="制造1万个人，每天换一个，陪你度过余生">制造1万个人，每天换一个，陪你度过余生</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">girls = [<span class="function"><span class="title">human</span><span class="params">(<span class="string">'泷泽萝拉'</span>)</span></span>, <span class="function"><span class="title">human</span><span class="params">(<span class="string">'吉泽明步'</span>)</span></span>...]</span><br></pre></td></tr></table></figure>
 <h4 id="你可以如上制作一万个人，但是你要自己敲一万个名字">你可以如上制作一万个人，但是你要自己敲一万个名字</h4><p>让我们试着改善下  </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">10000</span>):</span><br><span class="line">    Chinese.append(human(ranName()))</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">ranName</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">'按照一定规则取名'</span></span><br></pre></td></tr></table></figure>

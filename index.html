@@ -105,7 +105,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/tags/Python-basic/" style="font-size: 10px;">Python basic</a> <a href="/tags/Python黑魔法/" style="font-size: 10px;">Python黑魔法</a> <a href="/tags/yield/" style="font-size: 10px;">yield</a>
+						<a href="/tags/Boolean/" style="font-size: 10px;">Boolean</a> <a href="/tags/Python/" style="font-size: 10px;">Python</a> <a href="/tags/Python-basic/" style="font-size: 10px;">Python basic</a> <a href="/tags/Python黑魔法/" style="font-size: 10px;">Python黑魔法</a> <a href="/tags/True-False/" style="font-size: 10px;">True False</a> <a href="/tags/yield/" style="font-size: 10px;">yield</a>
 					</div>
 				</section>
 				
@@ -180,6 +180,177 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-Python的Boolean探秘" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/08/30/Python的Boolean探秘/" class="article-date">
+  	<time datetime="2016-08-30T02:39:45.000Z" itemprop="datePublished">2016-08-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/30/Python的Boolean探秘/">Python的Boolean探秘</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Python里的Boolean值">Python里的Boolean值</h1><p>首先，看一下官方定义的False值。</p>
+<ul>
+<li>None</li>
+<li>False</li>
+<li>zero of any numeric type, for example, 0, 0L, 0.0, 0j.</li>
+<li>any empty sequence, for example, ‘’, (), [].</li>
+<li>any empty mapping, for example, {}.</li>
+<li>instances of user-defined classes, if the class defines a __nonzero__() or __len__() method, when that method returns the integer zero or bool value False. [1]</li>
+</ul>
+<p>与java，c++等相比，特别需要注意的是， python将 空序列，空字典，以及实现了 __nonzero__() or __len__()这两种方法的类（len实现实际也是返回0），都认为是 False.</p>
+<p>考虑一下代码:</p>
+<pre><code><span class="keyword">if</span> <span class="literal">[]</span>:
+    print <span class="symbol">'Not</span> display'
+
+<span class="keyword">if</span> [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]:
+    print <span class="symbol">'will</span> display'
+
+<span class="keyword">if</span> {}:
+    print <span class="symbol">'not</span> display'
+</code></pre><p>所以判断一个数组，字典是否为空，你可以写得pythnic一点，而不是len(somelist) &gt; 0</p>
+<h1 id="Boolean_操作符">Boolean 操作符</h1><table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>x or y</td>
+<td>if x is false, then y, else x</td>
+<td></td>
+</tr>
+<tr>
+<td>x and y</td>
+<td>if x is false, then x, else y</td>
+<td></td>
+</tr>
+<tr>
+<td>not x</td>
+<td>if x is false, then True, else False</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>这又是跟其他语言不一样的黑魔法。<br>考虑以下例子：</p>
+<pre><code><span class="built_in">print</span> <span class="number">5</span> <span class="keyword">and</span> <span class="string">'a'</span>  <span class="comment"># 'a'</span>
+<span class="built_in">print</span> <span class="string">''</span> <span class="keyword">or</span> <span class="string">'sb'</span> <span class="comment"># 'sb'</span>
+</code></pre><p>上面情况很容易跟Python三元操作弄混淆。</p>
+<pre><code>print <span class="string">'今天我们去大保健'</span> <span class="keyword">if</span> money<span class="class">.enough</span> <span class="keyword">else</span> <span class="string">'今天我们不去大保健'</span>
+</code></pre><p>当然，and or not, 我们最多的还是用来操作 Ture False。当然也是有截断操作的，Fasle or whatever.</p>
+<h1 id="比较操作符">比较操作符</h1><table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt;</td>
+<td>strictly less than</td>
+<td></td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>less than or equal</td>
+<td></td>
+</tr>
+<tr>
+<td>></td>
+<td>strictly greater than</td>
+<td></td>
+</tr>
+<tr>
+<td>>=</td>
+<td>greater than or equal</td>
+<td></td>
+</tr>
+<tr>
+<td>==</td>
+<td>equal</td>
+<td></td>
+</tr>
+<tr>
+<td>!=</td>
+<td>not equal</td>
+<td></td>
+</tr>
+<tr>
+<td>is</td>
+<td>object identity</td>
+<td></td>
+</tr>
+<tr>
+<td>is not</td>
+<td>negated object identity</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>以前，不等于 != 还可以写作 &lt;&gt; 不过是为了保持以往代码的可用性，现在应该写成 !=</p>
+<p>考虑以下代码：</p>
+<pre><code>a = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]
+b = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]
+
+a == b   <span class="preprocessor"># True</span>
+a is b   <span class="preprocessor"># False</span>
+
+c = <span class="number">2</span>
+d = <span class="number">2</span>
+
+c == d <span class="preprocessor"># True</span>
+c is d <span class="preprocessor"># True</span>
+</code></pre><p>判断两个数字，不应该使用 is 符号。这个部分比较trick，现在的水平解释不清楚，就不谈了。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Boolean/">Boolean</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Python/">Python</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/True-False/">True False</a></li></ul>
+	</div>
+
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
   
     <article id="post-python的yield黑魔法" class="article article-type-post" itemscope itemprop="blogPost">
   
